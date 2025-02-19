@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validation with LocalStorage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        form {
+            width: 300px;
+            margin: 0 auto;
+        }
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+        }
+        input[type="submit"] {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Form Submission with LocalStorage</h2>
+
+<form name="myForm" onsubmit="return validateForm()">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name">
+    
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email">
+    
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password">
+    
+    <input type="submit" value="Submit">
+</form>
+
+<!-- Container to display submitted results -->
+<div id="result"></div>
+
+<script>
+// Load existing submissions from LocalStorage when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    loadSubmissions();
+});
+
+function validateForm() {
+    // Get the form inputs
+    var name = document.forms["myForm"]["name"].value;
+    var email = document.forms["myForm"]["email"].value;
+    var password = document.forms["myForm"]["password"].value;
+
+    // Validate Name
+    if (name == "") {
+        alert("Name must be filled out");
+        return false;
+    }
+
+    // Validate Email
+    if (email == "") {
+        alert("Email must be filled out");
+        return false;
+    } else {
+        // Simple email validation (basic pattern)
+        var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            alert("Please enter a valid email address");
+            return false;
+        }
+    }
+
+    // Validate Password
+    if (password == "") {
+        alert("Password must be filled out");
+        return false;
+    } else if (password.length < 6) {
+        alert("Password must be at least 6 characters long");
+        return false;
+    }
+
+    // Create an object for the current submission
+    var currentSubmission = {
+        name: name,
+        email: email,
+        password: password
+    };
+
+    // Get existing submissions from LocalStorage
+    var submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+
+    // Check if the same data was already submitted
+    if (isDuplicate(currentSubmission, submissions)) {
+        alert("This submission already exists.");
+        return false;  // Stop form submission
+    }
+
+    // Add the current submission to the list
+    submissions.push(currentSubmission);
+
+    // Save the updated submissions array to LocalStorage
+    localStorage.setItem('submissions', JSON.stringify(submissions));
+
+    // Display the submitted result
+    displayResult(currentSubmission);
+
+    return false;  // Prevent actual form submission for demo purposes
+}
+
+// Function to check for duplicate submissions
+function isDuplicate(submission, submissions) {
+    for (var i = 0; i < submissions.length; i++) {
+        if (submissions[i].name === submission.name &&
+            submissions[i].email === submission.email &&
+            submissions[i].password === submission.password) {
+            return true;  // Found a duplicate
+        }
+    }
+    return false;
+}
+
+// Function to display the result on the window
+function displayResult(submission) {
+    var resultDiv = document.getElementById('result');
+
+    // Append the submitted data to the resultDiv
+    var resultHTML = `<p><strong>Submitted Data:</strong></p>
+                      <p>Name: ${submission.name}</p>
+                      <p>Email: ${submission.email}</p>
+                      <p>Password: ${submission.password}</p><hr>`;
+    resultDiv.innerHTML += resultHTML;  // Append new submission
+}
+
+// Function to load and display submissions from LocalStorage
+function loadSubmissions() {
+    var submissions = JSON.parse(localStorage.getItem('submissions')) || [];
+    var resultDiv = document.getElementById('result');
+
+    // If there are saved submissions, display them
+    if (submissions.length > 0) {
+        for (var i = 0; i < submissions.length; i++) {
+            var resultHTML = `<p><strong>Submitted Data:</strong></p>
+                              <p>Name: ${submissions[i].name}</p>
+                              <p>Email: ${submissions[i].email}</p>
+                              <p>Password: ${submissions[i].password}</p><hr>`;
+            resultDiv.innerHTML += resultHTML;
+        }
+    }
+}
+</script>
+
+</body>
+</html>

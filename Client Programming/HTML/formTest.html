@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        function val(){
+            //We were called bc the submit button was processed - do we have
+            //values in both inputs?
+
+            if(document.forms[0].elements[0].value == ""){
+                return false;
+            }
+        }
+    </script>
+</head>
+<body>
+
+<form action="page.php" method="get" onsubmit=" val() " >
+    first name:<input type="text" name="fn" placeholder="Enter Name"/> <br/>
+    last name:<input type="text" name="ln" placeholder="Enter Name"/> <br/>
+
+    <input type="radio" name="test" id="labelTest1" value="first"/>
+    <label for="labelTest1">Hello there Label</label><br/>
+
+    <!-- <textarea rows="10" cols="40"></textarea> -->
+
+    <input type="submit" value="Click Me"/>
+
+    <!-- 
+    page.php?fn=dan
+
+    in my php - I would access this
+    $_GET['fn'] // if a get
+    $_POST['fn'] //if sent as a post
+    -->
+
+</form>
+    
+</body>
+</html>

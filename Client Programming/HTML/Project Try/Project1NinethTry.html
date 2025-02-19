@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Form Elements</title>
+    <style>
+        /* Header styling */
+        h1 {
+            background-color: yellow; /* Background color for the header */
+            color: red; /* Text color for the header */
+            display: inline; /* Inline display for the header */
+        }
+        /* Body styling */
+        body {
+            font-family: Arial, sans-serif; /* Font family for the body text */
+            margin: 20px; /* Margin around the body */
+            background-color: aqua; /* Background color for the body */
+        }
+        /* Container for form elements */
+        #formContainer {
+            margin-top: 10px; /* Space above the form container */
+            position: relative; /* Positioning context for child elements */
+        }
+        /* Styling for dropdowns and paragraphs */
+        select, p {
+            margin: 10px 0; /* Space above and below dropdowns/paragraphs */
+            opacity: 0; /* Initially hidden */
+            transform: translateX(100%); /* Initially off-screen to the right */
+            transition: transform 0s, opacity 0s; /* No initial animation on load */
+        }
+        /* Styling for displaying previous results */
+        #previousResults {
+            margin-top: 20px; /* Space above the previous results section */
+            padding: 10px; /* Padding inside the previous results box */
+            border: 1px solid #000; /* Border around the previous results section */
+            background-color: #fff; /* Background color for the previous results */
+        }
+    </style>    
+</head>
+<body>
+    <h1>Interactive Form Elements</h1> <!-- Main title of the page -->
+    <div id="formContainer"></div><!-- Container for dynamically generated form elements -->
+    <div id="previousResults"><!-- Section to display previous form submissions -->
+        <h2>Previous Submissions</h2><!-- Subheading for the previous submissions section -->
+        <ul id="resultsList"></ul><!-- Unordered list to hold the previous submission results -->
+    </div>
+
+    <script>
+        var data = {
+            // Initial question and options for the first dropdown
+            init: ['Choose your first option:', 'Man', 'Woman'], 
+
+            // Options that appear if the user selects "Man" in the first dropdown
+            Man: ['What kind of man?', 'tall', 'short'],
+
+            // Message that appears if the user selects "tall" after choosing "Man"
+            tall: ['You are Giant!'],
+
+            // Options that appear if the user selects "Woman" in the first dropdown
+            Woman: ['What color is your hair?', 'Red', 'Blonde'],
+
+            // Message that appears if the user selects "Red" after choosing "Woman"
+            Red: ['You are vampire!'],
+
+            // Message that appears if the user selects "Blonde" after choosing "Woman"
+            Blonde: ['You are american gal!']
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            createFormElements(); // Dynamically create form elements when the DOM is fully loaded
+            displayPreviousResults(); // Display previous results from local storage
+
+            // Reset Button functionality
+            document.getElementById('resetButton').addEventListener('click', function() {
+                document.getElementById('formContainer').innerHTML = ''; // Clear the form container
+                createFormElements(); // Recreate the form after reset
+            });
+
+        // Form submission with validation and storage check
+        document.getElementById('submitButton').addEventListener('click', function() {
+            // Get the values from the name input fields
+            let firstName = document.getElementById('firstName').value.trim(); // Trim whitespace
+            let lastName = document.getElementById('lastName').value.trim(); // Trim whitespace
+
+            // Validate if the fields are filled
+            if (!firstName) {
+                alert("Please enter your first name."); // Alert if first name is empty
+                return; // Exit the function
+            }
+            
+            if (!lastName) {
+                alert("Please enter your last name."); // Alert if last name is empty
+                return; // Exit the function
+            }
+
+            // Combine first and last names into one string
+            let fullName = `${firstName} ${lastName}`;
+            let storedNames = JSON.parse(localStorage.getItem('userNames')) || []; // Retrieve stored names from local storage
+
+            // Check if the name already exists in local storage
+            if (storedNames.includes(fullName)) {
+                alert("This name has already been submitted. Please enter a different name."); // Alert if name exists
+            } else {
+                // If the name is new, store it in local storage and notify the user
+                storedNames.push(fullName); // Add the new name to the array
+                localStorage.setItem('userNames', JSON.stringify(storedNames)); // Save updated names back to local storage
+                alert("Form submitted successfully!"); // Notify the user of successful submission
+                displayPreviousResults(); // Update the displayed results with the new submission
+            }
+        });
+    });
+
+        // Function to create the entire form using JavaScript
+        function createFormElements() {
+            var container = document.getElementById('formContainer'); // Get the container for the form
+
+            // Create form element
+            var form = document.createElement('form'); // Create a new form element
+            form.id = 'userForm'; // Assign an ID to the form
+
+            // Create label and input for first name
+            var firstNameLabel = document.createElement('label'); // Create a label for the first name
+            firstNameLabel.setAttribute('for', 'firstName'); // Associate the label with the input
+            firstNameLabel.textContent = 'First Name:'; // Set the label text
+            form.appendChild(firstNameLabel); // Add the label to the form
+
+            var firstNameInput = document.createElement('input'); // Create an input field for the first name
+            firstNameInput.type = 'text'; // Set input type to text
+            firstNameInput.id = 'firstName'; // Assign an ID to the input field
+            form.appendChild(firstNameInput); // Add the input field to the form
+            form.appendChild(document.createElement('br')); // Add a line break for spacing
+            form.appendChild(document.createElement('br')); // Add another line break for spacing
+
+            // Create label and input for last name
+            var lastNameLabel = document.createElement('label'); // Create a label for the last name
+            lastNameLabel.setAttribute('for', 'lastName'); // Associate the label with the input
+            lastNameLabel.textContent = 'Last Name:'; // Set the label text
+            form.appendChild(lastNameLabel); // Add the label to the form
+
+            var lastNameInput = document.createElement('input'); // Create an input field for the last name
+            lastNameInput.type = 'text'; // Set input type to text
+            lastNameInput.id = 'lastName'; // Assign an ID to the input field
+            form.appendChild(lastNameInput); // Add the input field to the form
+            form.appendChild(document.createElement('br')); // Add a line break for spacing
+            form.appendChild(document.createElement('br')); // Add another line break for spacing
+
+            // Create reset button
+            var resetButton = document.createElement('button'); // Create a button for resetting the form
+            resetButton.id = 'resetButton'; // Assign an ID to the reset button
+            resetButton.type = 'button'; // Set button type to button (not a submit type)
+            resetButton.textContent = 'Reset Form'; // Set the button text
+            form.appendChild(resetButton); // Add the reset button to the form
+            form.appendChild(document.createElement('br')); // Add a line break for spacing
+            form.appendChild(document.createElement('br')); // Add another line break for spacing
+
+            // Create submit button
+            var submitButton = document.createElement('button'); // Create a button for submitting the form
+            submitButton.id = 'submitButton'; // Assign an ID to the submit button
+            submitButton.type = 'button'; // Set button type to button (not a submit type)
+            submitButton.textContent = 'Submit'; // Set the button text
+            form.appendChild(submitButton); // Add the submit button to the form
+            
+            // Append the entire form to the container
+            container.appendChild(form); // Add the completed form to the container in the DOM
+
+            // Create the initial dropdown
+            createDropdown(data.init); // Call function to create the initial dropdown menu
+        }
+
+
+        // Function to create dropdown or display message
+        function createDropdown(options) {
+            var container = document.getElementById('formContainer'); // Get the container to hold the dropdown or message
+            var newElement; // Variable to hold the new element (dropdown or paragraph)
+
+            if (options.length === 1) { // Check if there's only one option (indicating a message)
+                newElement = document.createElement('p'); // Create a paragraph element for the message
+                newElement.textContent = options[0]; // Set the message text to the single option provided
+            } else { // If there are multiple options, create a dropdown
+                newElement = document.createElement('select'); // Create a select element for the dropdown
+                options.forEach(function(item) { // Iterate through the provided options
+                    var option = document.createElement('option'); // Create an option element for each item
+                    option.value = item; // Set the option's value to the item
+                    option.textContent = item; // Set the option's displayed text to the item
+                    newElement.appendChild(option); // Add the option to the dropdown
+                });
+
+                // Add event listener to handle changes in the dropdown selection
+                newElement.addEventListener('change', function() {
+                    var selectedValue = newElement.value; // Get the currently selected value from the dropdown
+
+                    // Remove existing elements that follow the current dropdown
+                    while (newElement.nextSibling) {
+                        newElement.nextSibling.remove(); // Remove any elements after the dropdown
+                    }
+
+                    // Check if there are additional options based on the selected value
+                    if (data[selectedValue]) { // If there are further options to display
+                        createDropdown(data[selectedValue]); // Recursively create a new dropdown with the selected options
+                    } else {
+                        displayMessage(selectedValue); // Otherwise, display a message for the selected value
+                    }
+                });
+            }
+            container.appendChild(newElement); // Add the new element (dropdown or message) to the container
+            slideInElement(newElement); // Trigger the slide-in animation for the newly added element
+        }
+
+        // Slide-in animation using requestAnimationFrame
+        function slideInElement(element) {
+            var startPos = 100; // Start position (off-screen to the right)
+            var endPos = 0; // Final position (in view)
+            var opacity = 0; // Initial opacity (fully transparent)
+            
+            // Animation step function that updates the position and opacity
+            function step() {
+                // Check if the element has not reached its final position or opacity
+                if (startPos > endPos || opacity < 1) {
+                    startPos -= 5; // Move the element 5 pixels closer to the final position
+                    opacity += 0.05; // Increase opacity by 0.05 for a gradual fade-in effect
+                    element.style.transform = `translateX(${startPos}%)`; // Update the element's position
+                    element.style.opacity = opacity; // Update the element's opacity
+                    requestAnimationFrame(step); // Request the next animation frame
+                }
+            }
+            // Start the animation by calling the step function
+            requestAnimationFrame(step);
+        }
+
+
+        // Function to display the final message
+        function displayMessage(message) {
+            var container = document.getElementById('formContainer'); // Get the container where the message will be displayed
+            var finalMessage = document.createElement('p'); // Create a new paragraph element for the final message
+            finalMessage.textContent = "Final Message: " + message; // Set the text content of the paragraph
+            container.appendChild(finalMessage); // Append the paragraph to the container
+            slideInElement(finalMessage); // Animate the message with a slide-in effect
+        }
+
+        // Function to display previous results
+        function displayPreviousResults() {
+            var resultsList = document.getElementById('resultsList'); // Get the list element to display previous results
+            resultsList.innerHTML = ''; // Clear previous results to avoid duplication
+
+            // Retrieve stored names from localStorage, or initialize to an empty array if none exist
+            var storedNames = JSON.parse(localStorage.getItem('userNames')) || [];
+
+            // Check if there are stored names to display
+            if (storedNames.length > 0) {
+                // Iterate through each stored name and create a list item for each
+                storedNames.forEach(function(name) {
+                    var listItem = document.createElement('li'); // Create a new list item element
+                    listItem.textContent = name; // Set the text content of the list item to the stored name
+                    resultsList.appendChild(listItem); // Append the list item to the results list
+                });
+            } else {
+                // If no previous submissions exist, display a message indicating this
+                var listItem = document.createElement('li'); // Create a new list item element
+                listItem.textContent = 'No previous submissions found.'; // Set the text content for the empty state
+                resultsList.appendChild(listItem); // Append the list item to the results list
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Form with In-Memory Data Storage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .hidden {
+            display: none;
+        }
+        .visible {
+            display: block;
+        }
+        .result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Dynamic Multi-Level Form (with In-Memory Data)</h1>
+
+    <form id="dynamicForm">
+        <!-- Step 1 -->
+        <label for="transportation">Choose your mode of transportation:</label>
+        <select id="transportation" name="transportation">
+            <option value="" selected disabled>Select one</option>
+            <option value="car">Car</option>
+            <option value="bike">Bike</option>
+            <option value="public">Public Transport</option>
+        </select>
+
+        <!-- Step 2 (Car Options) -->
+        <div id="carOptions" class="hidden">
+            <label for="carType">Choose car type:</label>
+            <select id="carType" name="carType">
+                <option value="" selected disabled>Select car type</option>
+                <option value="sedan">Sedan</option>
+                <option value="suv">SUV</option>
+                <option value="truck">Truck</option>
+            </select>
+        </div>
+
+        <!-- Step 2 (Bike Options) -->
+        <div id="bikeOptions" class="hidden">
+            <label for="bikeType">Choose bike type:</label>
+            <select id="bikeType" name="bikeType">
+                <option value="" selected disabled>Select bike type</option>
+                <option value="mountain">Mountain Bike</option>
+                <option value="road">Road Bike</option>
+                <option value="hybrid">Hybrid Bike</option>
+            </select>
+        </div>
+
+        <!-- Step 2 (Public Transport Options) -->
+        <div id="publicOptions" class="hidden">
+            <label for="publicType">Choose public transport type:</label>
+            <select id="publicType" name="publicType">
+                <option value="" selected disabled>Select transport type</option>
+                <option value="bus">Bus</option>
+                <option value="train">Train</option>
+                <option value="subway">Subway</option>
+            </select>
+        </div>
+
+        <!-- Result -->
+        <div class="result hidden" id="result"></div>
+    </form>
+
+    <script>
+        // Object to store form data in memory
+        const formData = {
+            transportation: '',
+            carType: '',
+            bikeType: '',
+            publicType: ''
+        };
+
+        // Get form elements
+        const transportation = document.getElementById('transportation');
+        const carOptions = document.getElementById('carOptions');
+        const bikeOptions = document.getElementById('bikeOptions');
+        const publicOptions = document.getElementById('publicOptions');
+        const resultDiv = document.getElementById('result');
+
+        // Event listener for first selection
+        transportation.addEventListener('change', function() {
+            const value = transportation.value;
+            formData.transportation = value;  // Store data in memory
+            showOptions(value);
+        });
+
+        function showOptions(value) {
+            // Hide all sub-options initially
+            carOptions.classList.add('hidden');
+            bikeOptions.classList.add('hidden');
+            publicOptions.classList.add('hidden');
+            resultDiv.classList.add('hidden'); // Hide result when starting over
+
+            // Show corresponding options based on the first selection
+            if (value === 'car') {
+                carOptions.classList.remove('hidden');
+            } else if (value === 'bike') {
+                bikeOptions.classList.remove('hidden');
+            } else if (value === 'public') {
+                publicOptions.classList.remove('hidden');
+            }
+        }
+
+        // Event listeners for each secondary selection to show result and store data
+        document.getElementById('carType').addEventListener('change', function() {
+            formData.carType = this.value;  // Store data in memory
+            showResult();
+        });
+        document.getElementById('bikeType').addEventListener('change', function() {
+            formData.bikeType = this.value;  // Store data in memory
+            showResult();
+        });
+        document.getElementById('publicType').addEventListener('change', function() {
+            formData.publicType = this.value;  // Store data in memory
+            showResult();
+        });
+
+        function showResult() {
+            // Get selected options from the formData object
+            const transport = formData.transportation;
+            let type = '';
+
+            if (transport === 'car') {
+                type = formData.carType;
+            } else if (transport === 'bike') {
+                type = formData.bikeType;
+            } else if (transport === 'public') {
+                type = formData.publicType;
+            }
+
+            // Display the result
+            resultDiv.innerHTML = `You chose to travel by <strong>${transport}</strong>, specifically a <strong>${type}</strong>.`;
+            resultDiv.classList.remove('hidden');
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Form Elements with Animation</title>
+    <style>
+        h1 {
+            background-color: yellow;
+            color: red;
+            display: inline;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: aqua;
+        }
+        #formContainer {
+            margin-top: 10px;
+            position: relative;
+        }
+        select, p {
+            margin: 10px 0;
+            opacity: 0;
+            transform: translateX(100%); /* Initially off-screen */
+            transition: transform 0s, opacity 0s; /* No initial animation */
+        }
+    </style>
+</head>
+<body>
+    <h1>Interactive Form Elements</h1>
+    <form>
+        <div id="formContainer"></div>
+        <button id="resetButton" type="button">Reset Form</button>
+    </form>
+
+    <script>
+        var data = {
+            init: ['Choose your first option:', 'Man', 'Woman'],
+            Man: ['What kind of man?', 'Tall', 'Short'],
+            Tall: ['You are Giant!'],
+            Short: ['You are quick!'],
+            Woman: ['What color is your hair?', 'Red', 'Blonde'],
+            Red: ['You are a vampire!'],
+            Blonde: ['You are an all-American gal!']
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Restore form state from localStorage
+            if (localStorage.getItem('formData')) {
+                const savedState = JSON.parse(localStorage.getItem('formData'));
+                createDropdown(savedState.options, savedState.index);
+            } else {
+                createDropdown(data.init, 0);
+            }
+
+            // Reset functionality
+            document.getElementById('resetButton').addEventListener('click', function() {
+                document.getElementById('formContainer').innerHTML = '';
+                localStorage.removeItem('formData'); // Clear saved state
+                createDropdown(data.init, 0);
+            });
+        });
+
+        // Function to create dropdown or display message
+        function createDropdown(options, index) {
+            var container = document.getElementById('formContainer');
+            var newElement;
+
+            if (options.length === 1) { // If it's a message (like "You are Giant!")
+                newElement = document.createElement('p');
+                newElement.textContent = options[0];
+            } else { // Otherwise, it's a dropdown with multiple options
+                newElement = document.createElement('select');
+                newElement.innerHTML = `<option value="">--Select an option--</option>`;
+                
+                options.forEach(function(item, idx) {
+                    var option = document.createElement('option');
+                    option.value = item;
+                    option.textContent = item;
+                    newElement.appendChild(option);
+                });
+
+                newElement.addEventListener('change', function() {
+                    var selectedValue = newElement.value;
+
+                    // Form Validation: Ensure valid selection
+                    if (selectedValue === "") {
+                        alert("Please select an option.");
+                        return;
+                    }
+
+                    // Remove existing elements after the current dropdown
+                    while (newElement.nextSibling) {
+                        newElement.nextSibling.remove();
+                    }
+
+                    // Save form state in localStorage
+                    localStorage.setItem('formData', JSON.stringify({ options: data[selectedValue] || [selectedValue], index: index + 1 }));
+
+                    if (data[selectedValue]) {
+                        createDropdown(data[selectedValue], index + 1);
+                    } else {
+                        displayMessage(selectedValue);
+                    }
+                });
+            }
+
+            container.appendChild(newElement);
+            slideInElement(newElement); // Trigger the slide-in animation
+        }
+
+        // Slide-in animation using requestAnimationFrame
+        function slideInElement(element) {
+            var startPos = 100; // Start position (off-screen)
+            var endPos = 0; // Final position (in view)
+            var opacity = 0;
+            
+            function step() {
+                if (startPos > endPos || opacity < 1) {
+                    startPos -= 5; // Move 5px at a time
+                    opacity += 0.05; // Increase opacity gradually
+                    element.style.transform = `translateX(${startPos}%)`;
+                    element.style.opacity = opacity;
+                    requestAnimationFrame(step);
+                }
+            }
+
+            // Start the animation
+            requestAnimationFrame(step);
+        }
+
+        // Function to display the final message
+        function displayMessage(message) {
+            var container = document.getElementById('formContainer');
+            var finalMessage = document.createElement('p');
+            finalMessage.textContent = "Final Message: " + message;
+            container.appendChild(finalMessage);
+            slideInElement(finalMessage); // Animate the message
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Form Elements</title>
+    <style>
+        h1 {
+            background-color: yellow;
+            color: red;
+            display: inline;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #formContainer {
+            margin-top: 10px;
+        }
+        select {
+            margin: 10px 0;
+        }
+        button {
+            margin-top: 20px;
+        }
+        body {
+            background-color: aqua;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var data = {
+                init: ['Which gender are you?', 'Man', 'Woman'],
+                Man: ['What kind of man?', 'Tall', 'Short'],
+                Tall: ['You are a Giant!'],
+                Woman: ['What color is your hair?', 'Red', 'Blonde'],
+                Red: ['You are a vampire!'],
+                Blonde: ['You are an American gal!']
+            };
+    
+            // Function to create a new dropdown based on user choice
+            function createDropdown(nextData, index) {
+                var container = document.getElementById('formContainer');
+                var newSelect = document.createElement('select');
+    
+                nextData.forEach(function(item, idx) {
+                    var option = document.createElement('option');
+                    option.value = item;
+                    option.textContent = item;
+                    newSelect.appendChild(option);
+                });
+    
+                newSelect.addEventListener('change', function() {
+                    var selectedValue = newSelect.value;
+                    
+                    // Store the selected value in both localStorage and cookies
+                    saveToStorage(`dropdown${index}`, selectedValue);
+    
+                    // Clear any previously generated dropdowns after the current one
+                    while (newSelect.nextSibling) {
+                        newSelect.nextSibling.remove();
+                    }
+    
+                    if (data[selectedValue]) {
+                        createDropdown(data[selectedValue], index + 1);
+                    } else {
+                        displayFinalChoice(selectedValue);
+                    }
+                });
+    
+                container.appendChild(newSelect);
+            }
+    
+            // Function to display the final choice
+            function displayFinalChoice(choice) {
+                var container = document.getElementById('formContainer');
+                var result = document.createElement('p');
+                result.textContent = "Final Choice: " + choice;
+                container.appendChild(result);
+    
+                // Store the final choice
+                saveToStorage('finalChoice', choice);
+            }
+    
+            // Function to save data to localStorage and cookies
+            function saveToStorage(key, value) {
+                // Save to localStorage
+                localStorage.setItem(key, value);
+    
+                // Save to cookies
+                document.cookie = `${key}=${value}; path=/;`;
+            }
+    
+            // Function to retrieve data from localStorage or cookies
+            function getFromStorage(key) {
+                // Try to get from localStorage first
+                if (localStorage.getItem(key)) {
+                    return localStorage.getItem(key);
+                }
+    
+                // If not available in localStorage, check cookies
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    if (cookie.indexOf(key + '=') === 0) {
+                        return cookie.substring(key.length + 1);
+                    }
+                }
+    
+                return null;
+            }
+    
+            // Initialize first dropdown
+            createDropdown(data.init, 0);
+    
+            // Reset button functionality
+            document.getElementById('resetButton').addEventListener('click', function() {
+                document.getElementById('formContainer').innerHTML = '';  // Clear all form elements
+                createDropdown(data.init, 0);  // Restart the form
+                localStorage.clear();  // Clear localStorage
+                document.cookie = '';  // Clear cookies
+            });
+        });
+    </script>
+    
+</head>
+<body>
+    <form>
+        <h1>Interactive Form Elements</h1>
+        <div id="formContainer">
+            <!-- The dropdowns will be generated here dynamically -->
+        </div>
+
+        <button id="resetButton" type="button">Reset Form</button>
+    </form>
+</body>
+</html>

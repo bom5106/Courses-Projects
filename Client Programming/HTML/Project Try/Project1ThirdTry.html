@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Form Elements</title>
+    <style>
+        h1 {
+            background-color: yellow;
+            color: red;
+            display: inline;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: aqua;
+        }
+        #formContainer {
+            margin-top: 10px;
+        }
+        select {
+            margin: 10px 0;
+        }
+        button {
+            margin-top: 20px;
+        }
+    </style>
+    <script type="text/javascript" src="cookies.js"></script>
+    <script>
+        // Data structure simplified
+        let data = {
+            man: ['What kind of man?', 'tall', 'short'],
+            tall: ['You are Giant!'],
+            woman: ['What color is your hair?', 'Red', 'Blonde'],
+            Red: ['You are vampire!'],
+            Blonde: ['You are american gal!']
+        };
+
+        // Function to build the next select or display a message
+        function build(dom) {
+            // Get the selected value
+            let selectedValue = dom.value;
+            // Get the corresponding data for the selected value
+            let hold = data[selectedValue];
+
+            if (hold != undefined) {
+                // We have data to build the next select
+
+                // Create a new select element
+                let sel = document.createElement('select');
+                sel.setAttribute('onchange', 'build(this)'); // Set the onchange event
+
+                // Add options to the new select
+                for (let i = 0; i < hold.length; i++) {
+                    let opt = document.createElement('option');
+                    opt.value = hold[i];
+                    opt.textContent = hold[i];
+                    sel.appendChild(opt); // Append option to select
+                }
+
+                // Append the newly created select to the form container
+                document.getElementById('formContainer').appendChild(sel);
+            } else {
+                // When there's no more data, display the final message
+                let message = document.createElement('p');
+                message.textContent = selectedValue; // Final message
+                document.getElementById('formContainer').appendChild(message);
+            }
+        }
+
+        // Script to handle the 'Reset Form' Button
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('resetButton').addEventListener('click', function() {
+                document.getElementById('formContainer').innerHTML = '';  // Clear all form elements
+                location.reload();  // Reload the page to reset everything
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <form>
+        <h1>Interactive Form Elements</h1>
+        <div id="formContainer">
+            <!-- Initial dropdown menu -->
+            <label for="firstDropdown">Choose your first option:</label>
+            <select id="firstDropdown" onchange="build(this)">
+                <option value="">--Select an option--</option>
+                <option value="man">Man</option>
+                <option value="woman">Woman</option>
+            </select>
+        </div>
+
+        <button type="button" id="resetButton">Reset Form</button>
+    </form>
+</body>
+</html>

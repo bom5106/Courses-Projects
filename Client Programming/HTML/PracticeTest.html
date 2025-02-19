@@ -1,0 +1,100 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+        function val(){
+            //test if val is good
+            return false;
+        }
+    </script>
+</head>
+<body>
+    <form onsubmit="return val();">
+        fn:<input type="text" placeholder="give name" name="fn"/>
+        <input type="submit" value="click me" />
+    </form>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+        function init(){
+            //build something
+            //document.getElementByID, getElementsByTagName, getElementsByClassName
+            //createElement, setAttribute, createTextNode
+            //placement
+            //appendChild, insertBefore, removeChild, replaceChild, cloneNode
+            var x = document.createElement('button');
+            x.setAttribute('id','test');
+            
+            x.id = "test";
+            x.onclick = doIt;
+            x.setAttribute('onmouseover',"doIt()");
+            x.onmouseout = function(){doThat('args');};
+
+            x.appendChild(document.createTextNode("press me"));
+            //<button id="test">press me</button>
+
+            document.getElementsByTagName('body')[0].appendChild(x);
+
+            //parent.appendChild(ele);
+            document.getElementsByTagName('p')[0].appendChild(x);
+
+            //parent.insertBefore(ele, childOfParentToGoInFrontOf);
+            document.getElementsByTagName('p')[0].insertBefore(x,
+                document.getElementsByTagName('p')[0].firstChild);
+            
+            //parent.removeChild(childOfParentToRemove);
+
+            //parent.replaceChild(ele, childOfParentToReplace);
+
+            //node.cloneNode(t/f);
+            
+            //get the p
+            // document.getElementsByTagName('p')[0].onclick = doIt;
+            // document.getElementsByTagName('p')[0].addEventListener('click',functionToCall);
+        }
+
+        function doIt(){
+            console.log('did');
+        }
+        function doThat(x){
+            console.log(x);
+        }
+    </script>
+</head>
+<body onload ="init();">
+    <!-- <p>HELLO!</p> -->
+    <!-- <p>Other Text</p>
+    <div>
+        <p>Text</p>
+        <p>...</p>
+    </div> -->
+
+    <div>
+        <p>One</p>
+        <p>Two</p>
+    </div>
+</body>
+</html>
+
+<!-- document.getElementsByTagName('p')[0].firstChild.nodeValue = 'fred'
+
+document.getElementsByTagName('div')[0].getElementsByTagName('p')[0].firstChild.nodeValue = 'fred' -->
+
+<!-- document.getElementByID('thing').style
+
+dom.style.rule = 'value';
+
+dom.style.color = 'red';
+dom.style.borderMarginBottom = 'times';
+
+everyhting is a string!
+
+Units -->
