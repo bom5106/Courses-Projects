@@ -1,0 +1,11 @@
+.EmploymentMap {
+    text-align: center;
+    margin: 1em auto;
+  }
+  
+  .EmploymentMap iframe {
+    border: none;
+    width: 90%;
+    height: 600px;
+  }
+  

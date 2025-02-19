@@ -1,0 +1,40 @@
+.Degree {
+  padding: 1em;
+  font-family: Arial, sans-serif;
+}
+
+.degreeCard {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin: 1em 0;
+  padding: 1em;
+  background-color: #f9f9f9;
+}
+
+.degreeCard h3 {
+  margin: 0.5em 0;
+  text-align: center; /* Centers the degree title */
+}
+
+.degreeCard p {
+  text-align: center; /* Centers the description */
+}
+
+.degreeCard ul {
+  margin: 0.5em 0;
+  padding-left: 20px;
+  text-align: left; /* Keep the list aligned left */
+}
+
+.degreeCard .degree-info {
+  text-align: right; /* Right-aligns any content wrapped inside degree-info class */
+}
+
+/* If you want to apply right alignment to any degree description specifically */
+.degreeCard p.right-align {
+  text-align: right;
+}
+
+.degreeCard ul.right-align {
+  text-align: right; /* Right-aligns list items */
+}

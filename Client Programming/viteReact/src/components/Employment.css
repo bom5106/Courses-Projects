@@ -1,0 +1,63 @@
+.Employment {
+    padding: 1em;
+    font-family: Arial, sans-serif;
+    text-align: center; /* Center headings */
+  }
+  
+  .employmentTable {
+    margin: 1em auto; /* Centers the table */
+    width: 90%;
+    border-collapse: collapse;
+  }
+  
+  .employmentTable th, .employmentTable td {
+    border: 1px solid #ddd;
+    padding: 0.5em;
+    text-align: left;
+  }
+  
+  .employmentTable th {
+    background-color: #f4f4f4;
+  }
+  
+  .paginationControls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1em auto;
+    width: 90%;
+  }
+  
+  .rowsPerPage select {
+    margin-left: 0.5em;
+    padding: 0.2em;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .paginationSummary {
+    font-weight: bold;
+  }
+  
+  .paginationButtons {
+    display: flex;
+    gap: 0.5em;
+  }
+  
+  .paginationButton {
+    padding: 0.5em;
+    border: 1px solid #ddd;
+    background-color: white;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .paginationButton:disabled {
+    background-color: #f4f4f4;
+    cursor: not-allowed;
+  }
+  
+  .paginationButton:hover:not(:disabled) {
+    background-color: #f4f4f4;
+  }
+  

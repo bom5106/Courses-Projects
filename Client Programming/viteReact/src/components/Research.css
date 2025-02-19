@@ -1,0 +1,29 @@
+.Research {
+    font-family: Arial, sans-serif;
+    padding: 1em;
+  }
+  
+  .Research h2, .Research h3 {
+    text-align: center;
+  }
+  
+  .interestArea, .facultyResearch {
+    margin-bottom: 1em;
+    border: 1px solid #ddd;
+    padding: 1em;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .interestArea h4, .facultyResearch h4 {
+    margin-bottom: 0.5em;
+  }
+  
+  ul {
+    padding-left: 1.5em;
+  }
+  
+  ul li {
+    margin-bottom: 0.5em;
+  }
+  
